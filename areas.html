@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Areas in {{ city }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 { color: #2c3e50; margin-bottom: 30px; }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #555;
+            font-weight: bold;
+            padding: 10px 20px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        /* Dynamic Backgrounds classes */
+        .default, .cloudy { background: linear-gradient(to bottom right, #bdc3c7, #2c3e50); }
+        .rainy { background: linear-gradient(to bottom right, #24c6dc, #514a9d); }
+        .danger { background: linear-gradient(to bottom right, #cb2d3e, #ef473a); }
+        .sunny { background: linear-gradient(to bottom right, #ffb347, #ffcc33); color: #333; }
+        .snowy { background: linear-gradient(to bottom right, #e6dada, #274046); color: #333; }
+
+        .temp { font-size: 2.5rem; font-weight: bold; margin: 10px 0; }
+        .desc { font-size: 1.1rem; text-transform: capitalize; }
+    </style>
+</head>
+<body>
+
+    <a href="/" class="back-btn">← Back to Search</a>
+
+    <h1>Weather in {{ city }} Areas</h1>
+
+    <div class="grid">
+        {% for area in areas %}
+        <div class="card {{ area.category }}">
+            <h2>{{ area.name }}</h2>
+            <img src="http://openweathermap.org/img/wn/{{ area.icon }}@2x.png" alt="icon">
+            <div class="temp">{{ area.temp }}°C</div>
+            <p class="desc">{{ area.desc }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
