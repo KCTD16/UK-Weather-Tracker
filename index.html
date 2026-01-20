@@ -35,3 +35,37 @@
         {% if weather %}
             <div class="weather-grid">
                 <div class="col">
+                    <h3>Previous</h3>
+                    {% for day in previous %}<p><strong>{{ day.day }}</strong> <img src="https://openweathermap.org/img/wn/{{ day.icon }}.png" class="mini-icon"> {{ day.temp }}°C</p>{% endfor %}
+                </div>
+                <div class="col main">
+                    <h2>{{ weather.name }}</h2>
+                    <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@4x.png" style="width: 80px;">
+                    <div class="temp">{{ weather.temp }}°C</div>
+                    <p>{{ weather.desc.capitalize() }}</p>
+                    
+                    <!-- NEW LOGIC DISPLAY -->
+                    <div style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;">
+                        Wind: {{ weather.wind }} mph | Humidity: {{ weather.humidity }}%
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: bold; margin-top: 5px; color: #2c3e50;">
+                        {{ weather.trend }}
+                    </div>
+
+                    {% if has_areas %}<a href="/areas/{{ weather.query_name }}" class="area-btn">View Local Areas</a>{% endif %}
+                </div>
+                <div class="col">
+                    <h3>Forecast</h3>
+                    {% for day in forecast %}<p><strong>{{ day.day[:3] }}</strong> <img src="https://openweathermap.org/img/wn/{{ day.icon }}.png" class="mini-icon"> {{ day.temp }}°C</p>{% endfor %}
+                </div>
+            </div>
+            <div class="insight-section">
+                <strong>Analyst Insight:</strong> <em>{{ weather.insight }}</em>
+            </div>
+        {% endif %}
+        <a href="https://github.com/KCTD16/UK-Crime-Data-Analytics" class="portfolio-btn">
+           🚀 VIEW URBAN SAFETY DATA AUDIT (LONDON VS MANCHESTER)
+        </a>
+    </div>
+</body>
+</html>
