@@ -5,149 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UK Weather Tracker</title>
     <style>
-        /* BASE STYLES */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            transition: background 0.5s ease;
-            background-color: #f0f4f8;
-            padding: 20px;
-        }
-
-        /* DYNAMIC BACKGROUNDS */
+        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; transition: background 0.5s ease; background-color: #f0f4f8; padding: 20px; }
         body.default, body.cloudy { background: linear-gradient(to bottom right, #bdc3c7, #2c3e50); }
         body.rainy { background: linear-gradient(to bottom right, #24c6dc, #514a9d); }
         body.danger { background: linear-gradient(to bottom right, #cb2d3e, #ef473a); }
         body.sunny { background: linear-gradient(to bottom right, #ffb347, #ffcc33); }
         body.snowy { background: linear-gradient(to bottom right, #e6dada, #274046); }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            text-align: center;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        h1 { color: #2c3e50; margin-bottom: 1.5rem; }
-
-        .search-box {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        input { padding: 12px; width: 60%; border: 2px solid #ddd; border-radius: 8px; outline: none; }
+        .container { background: rgba(255, 255, 255, 0.95); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; width: 100%; max-width: 850px; }
+        .search-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        input { padding: 12px; width: 60%; border: 2px solid #ddd; border-radius: 8px; }
         button { padding: 12px 25px; background-color: #333; color: white; border: none; border-radius: 8px; cursor: pointer; }
-        button:hover { background-color: #555; }
-
         .weather-grid { display: flex; justify-content: space-between; gap: 20px; text-align: left; }
         .col { flex: 1; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 15px; }
-        .col.main { flex: 1.5; background: rgba(0,0,0,0.06); transform: scale(1.05); }
-        h3 { margin-top: 0; color: #555; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
-
-        .mini-card { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .mini-card img { width: 40px; }
-
-        .current-card { text-align: center; }
-        .temp-row { display: flex; justify-content: center; align-items: center; }
-        .temp { font-size: 3.5rem; font-weight: bold; color: #333; }
-        .desc { font-size: 1.2rem; color: #666; margin-top: -15px; margin-bottom: 20px; }
-
-        /* BUTTON FOR AREAS */
-        .area-btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 8px 16px;
-            background-color: #2c3e50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 0.9rem;
-        }
-        .area-btn:hover { background-color: #34495e; }
-
-        /* MESSAGE FOR NO AREAS */
-        .no-areas {
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: #888;
-            font-style: italic;
-        }
-
-        @media (max-width: 700px) { .weather-grid { flex-direction: column; } .col.main { transform: scale(1); } }
+        .col.main { flex: 1.5; background: rgba(0,0,0,0.06); transform: scale(1.05); text-align: center; }
+        .temp { font-size: 3.5rem; font-weight: bold; }
+        .area-btn { display: inline-block; margin-top: 15px; padding: 8px 16px; background-color: #2c3e50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        .insight-section { margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; text-align: left; font-size: 0.9rem; color: #444; }
+        .portfolio-btn { display: block; margin-top: 35px; padding: 20px; background: #000; color: #fff !important; text-decoration: none; border-radius: 15px; font-weight: bold; border: 2px solid #333; transition: 0.3s; }
+        .mini-icon { width: 35px; vertical-align: middle; }
     </style>
 </head>
 <body class="{{ weather.category if weather else 'default' }}">
-
     <div class="container">
         <h1>🇬🇧 UK Weather Hub</h1>
-        
         <form method="POST" class="search-box">
             <input type="text" name="city" placeholder="Enter City (e.g. London)" required>
             <button type="submit">Search</button>
         </form>
-
-        {% if error %}
-            <div style="color: red;">{{ error }}</div>
-        {% endif %}
-
         {% if weather %}
             <div class="weather-grid">
-                
-                <!-- PREVIOUS -->
                 <div class="col">
-                    <h3>Previous</h3>
-                    {% for day in previous %}
-                    <div class="mini-card" style="opacity: 0.6;">
-                        <div><strong>{{ day.day }}</strong><br>{{ day.desc }}</div>
-                        <div><img src="http://openweathermap.org/img/wn/{{ day.icon }}.png"> {{ day.temp }}°C</div>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <!-- CURRENT -->
-                <div class="col main">
-                    <h3>Current</h3>
-                    <div class="current-card">
-                        <h2>{{ weather.name }}</h2>
-                        <div class="temp-row">
-                            <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png">
-                            <span class="temp">{{ weather.temp }}°C</span>
-                        </div>
-                        <p class="desc">{{ weather.desc }}</p>
-                        
-                        <!-- NEW LOGIC FOR AREAS -->
-                        {% if has_areas %}
-                            <a href="/areas/{{ weather.query_name }}" class="area-btn">View Local Areas</a>
-                        {% else %}
-                            <div class="no-areas">No local areas available</div>
-                        {% endif %}
-                        
-                    </div>
-                </div>
-
-                <!-- FORECAST -->
-                <div class="col">
-                    <h3>Forecast</h3>
-                    {% for day in forecast %}
-                    <div class="mini-card">
-                        <div><strong>{{ day.day }}</strong><br>{{ day.desc }}</div>
-                        <div><img src="http://openweathermap.org/img/wn/{{ day.icon }}.png"> {{ day.temp }}°C</div>
-                    </div>
-                    {% endfor %}
-                </div>
-
-            </div>
-        {% endif %}
-    </div>
-
-</body>
-</html>
